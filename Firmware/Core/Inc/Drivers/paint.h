@@ -35,7 +35,6 @@ void Paint_drawRectangle(Paint_Section* section, uint16_t x0, uint16_t y0, uint1
                          uint8_t filled);
 void Paint_drawCircle(Paint_Section* section, uint16_t x, uint16_t y, uint16_t radius, Paint_Color color,
                       uint8_t filled);
-void Paint_drawString(Paint_Section* section, uint16_t x, uint16_t y, const char* text, Font_t* font,
-                      Paint_Color color);
+void Paint_drawString(Paint_Section* section, uint16_t x, uint16_t y, char* text, Font_t* font, Paint_Color color);
 
 #endif

@@ -40,6 +40,7 @@ Core/Src/main.c \
 Core/Src/stm32l0xx_it.c \
 Core/Src/stm32l0xx_hal_msp.c \
 Core/Src/Drivers/paint.c \
+Core/Src/Drivers/sht40.c \
 Core/Src/Drivers/er_epm027.c \
 Core/Src/Utils/font12.c \
 Core/Src/Utils/font24.c \

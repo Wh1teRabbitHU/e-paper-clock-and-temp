@@ -75,8 +75,8 @@ void ER_EPM027_start(void) { /* EPD hardware init start */
     ER_EPM027_sendData(0x7C);
     ER_EPM027_sendData(0x00);
 
-    ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
-    ER_EPM027_sendData(0x00);
+    // ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
+    // ER_EPM027_sendData(0x00);
     ER_EPM027_sendCommand(ER_EPM027_CMD_POWER_ON);
     ER_EPM027_WaitUntilIdle();
 
@@ -162,8 +162,7 @@ void ER_EPM027_sendScreen(const uint8_t *imageBuffer, uint16_t width, uint16_t h
 
     HAL_Delay(2);
 
-    ER_EPM027_sendCommand(ER_EPM027_CMD_DISPLAY_REFRESH);
-    ER_EPM027_WaitUntilIdle();
+    ER_EPM027_drawScreen();
 }
 
 void ER_EPM027_drawScreen(void) {

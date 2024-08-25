@@ -23,7 +23,10 @@
 /* USER CODE BEGIN Includes */
 #include "er_epm027.h"
 #include "fonts.h"
+#include "math.h"
 #include "paint.h"
+#include "sht40.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,6 +97,13 @@ int main(void) {
     MX_I2C1_Init();
     MX_SPI1_Init();
     /* USER CODE BEGIN 2 */
+    SHT40_init(&hi2c1);
+
+    char tempBuffer[16];
+    char humidityBuffer[16];
+
+    SHT40_MeasurementResult tempResult = {0};
+
     Paint_Section section = {0};
 
     section.x = ER_EPM027_WIDTH - 48;
@@ -103,14 +113,9 @@ int main(void) {
     section.rotation = PAINT_ROTATION_90;
 
     Paint_init(&section);
-    Paint_drawRectangle(&section, 16, 16, 46, 46, PAINT_COLOR_BLACK, 1);
-    Paint_drawRectangle(&section, 0, 0, 32, 32, PAINT_COLOR_WHITE, 1);
-    Paint_drawString(&section, 2, 2, "Hello World!", &Font12, PAINT_COLOR_BLACK);
 
     ER_EPM027_init(&hspi1);
     ER_EPM027_clearScreen();
-    ER_EPM027_sendSection(&section);
-    ER_EPM027_drawSection(&section);
 
     /* USER CODE END 2 */
 
@@ -121,8 +126,26 @@ int main(void) {
 
         /* USER CODE BEGIN 3 */
         ER_EPM027_sleep();
-        HAL_Delay(2000);
+        HAL_Delay(10000);
+
+        SHT40_getMeasurement(SHT40_PRECISION_MEDIUM, &tempResult);
+
+        uint8_t tempDecimal = tempResult.temperature;
+        float tmpFrac1 = tempResult.temperature - tempDecimal;
+        int tempFraction = trunc(tmpFrac1 * 100);
+
+        sprintf(tempBuffer, "%d.%dC", tempDecimal, tempFraction);
+        Paint_drawString(&section, 2, 2, tempBuffer, &Font12, PAINT_COLOR_BLACK);
+
+        uint8_t humDecimal = tempResult.humidity;
+        float tmpFrac2 = tempResult.humidity - humDecimal;
+        int humFraction = trunc(tmpFrac2 * 100);
+
+        sprintf(humidityBuffer, "%d.%d%%", humDecimal, humFraction);
+        Paint_drawString(&section, 2, 18, humidityBuffer, &Font12, PAINT_COLOR_BLACK);
+
         ER_EPM027_start();
+        ER_EPM027_sendSection(&section);
         ER_EPM027_drawSection(&section);
     }
     /* USER CODE END 3 */
@@ -310,7 +333,7 @@ void Error_Handler(void) {
  * @param  line: assert_param error line source number
  * @retval None
  */
-void assert_failed(uint8_t *file, uint32_t line) {
+void assert_failed(uint8_t* file, uint32_t line) {
     /* USER CODE BEGIN 6 */
     /* User can add his own implementation to report the file name and line number,
        ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

@@ -38,6 +38,7 @@ BUILD_DIR = build
 C_SOURCES =  \
 Core/Src/Drivers/er_epm027.c \
 Core/Src/Drivers/paint.c \
+Core/Src/Drivers/sht40.c \
 Core/Src/Utils/font12.c \
 Core/Src/Utils/font24.c \
 Core/Src/main.c \

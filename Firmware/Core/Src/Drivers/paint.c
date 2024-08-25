@@ -182,8 +182,7 @@ void Paint_drawCircle(Paint_Section* section, uint16_t x, uint16_t y, uint16_t r
     } while (x_pos <= 0);
 }
 
-void Paint_drawString(Paint_Section* section, uint16_t x, uint16_t y, const char* text, Font_t* font,
-                      Paint_Color color) {
+void Paint_drawString(Paint_Section* section, uint16_t x, uint16_t y, char* text, Font_t* font, Paint_Color color) {
     const char* p_text = text;
     uint16_t refcolumn = x;
 
