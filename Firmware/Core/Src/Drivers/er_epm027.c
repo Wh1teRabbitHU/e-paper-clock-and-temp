@@ -98,41 +98,41 @@ void ER_EPM027_init(SPI_HandleTypeDef *spiHandler) {
     ER_EPM027_start();
 }
 
-void ER_EPM027_sendSection(const uint8_t *buffer, uint16_t x, uint16_t y, uint16_t w, uint16_t l) {
-    if (buffer == NULL) {
+void ER_EPM027_sendSection(const Paint_section *section) {
+    if (section->buffer == NULL) {
         return;
     }
 
     ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DATA_START_TRANSMISSION_2);
-    ER_EPM027_sendData(x >> 8);
-    ER_EPM027_sendData(x & 0xf8);  // x should be the multiple of 8, the last 3 bit will always be ignored
-    ER_EPM027_sendData(y >> 8);
-    ER_EPM027_sendData(y & 0xff);
-    ER_EPM027_sendData(w >> 8);
-    ER_EPM027_sendData(w & 0xf8);  // w (width) should be the multiple of 8, the last 3 bit will always be ignored
-    ER_EPM027_sendData(l >> 8);
-    ER_EPM027_sendData(l & 0xff);
+    ER_EPM027_sendData(section->x >> 8);
+    ER_EPM027_sendData(section->x & 0xf8);
+    ER_EPM027_sendData(section->y >> 8);
+    ER_EPM027_sendData(section->y & 0xff);
+    ER_EPM027_sendData(section->width >> 8);
+    ER_EPM027_sendData(section->width & 0xf8);
+    ER_EPM027_sendData(section->height >> 8);
+    ER_EPM027_sendData(section->height & 0xff);
 
     HAL_Delay(2);
 
-    for (int i = 0; i < w / 8 * l; i++) {
-        ER_EPM027_sendData(buffer[i]);
+    for (int i = 0; i < section->width / 8 * section->height; i++) {
+        ER_EPM027_sendData(section->buffer[i]);
     }
 
     HAL_Delay(2);
 }
 
-void ER_EPM027_drawSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l) {
+void ER_EPM027_drawSection(const Paint_section *section) {
     ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
 
-    ER_EPM027_sendData(x >> 8);
-    ER_EPM027_sendData(x & 0xf8);  // x should be the multiple of 8, the last 3 bit will always be ignored
-    ER_EPM027_sendData(y >> 8);
-    ER_EPM027_sendData(y & 0xff);
-    ER_EPM027_sendData(w >> 8);
-    ER_EPM027_sendData(w & 0xf8);  // w (width) should be the multiple of 8, the last 3 bit will always be ignored
-    ER_EPM027_sendData(l >> 8);
-    ER_EPM027_sendData(l & 0xff);
+    ER_EPM027_sendData(section->x >> 8);
+    ER_EPM027_sendData(section->x & 0xf8);
+    ER_EPM027_sendData(section->y >> 8);
+    ER_EPM027_sendData(section->y & 0xff);
+    ER_EPM027_sendData(section->width >> 8);
+    ER_EPM027_sendData(section->width & 0xf8);
+    ER_EPM027_sendData(section->height >> 8);
+    ER_EPM027_sendData(section->height & 0xff);
 
     ER_EPM027_WaitUntilIdle();
 }

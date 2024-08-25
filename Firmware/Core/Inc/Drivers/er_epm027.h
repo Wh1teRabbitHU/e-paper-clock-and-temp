@@ -3,6 +3,7 @@
 #define INC_ER_EPM027_H_
 
 #include "main.h"
+#include "paint.h"
 #include "stdint.h"
 
 #define ER_EPM027_WIDTH 176
@@ -54,8 +55,8 @@ void ER_EPM027_powerOff(void);
 void ER_EPM027_sleep();
 void ER_EPM027_start(void);
 void ER_EPM027_init(SPI_HandleTypeDef* spiHandler);
-void ER_EPM027_sendSection(const uint8_t* buffer, uint16_t x, uint16_t y, uint16_t w, uint16_t l);
-void ER_EPM027_drawSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l);
+void ER_EPM027_sendSection(const Paint_section* section);
+void ER_EPM027_drawSection(const Paint_section* section);
 void ER_EPM027_sendScreen(const uint8_t* imageBuffer, uint16_t width, uint16_t height);
 void ER_EPM027_drawScreen(void);
 void ER_EPM027_clearScreen(void);

@@ -19,11 +19,13 @@ typedef enum Paint_PixelColor_t { PAINT_COLOR_WHITE = 0, PAINT_COLOR_BLACK = 1 }
 typedef struct Paint_section {
     Paint_Rotation_t rotation;
     uint8_t* buffer;
+    uint16_t x;
+    uint16_t y;
     uint16_t width;
     uint16_t height;
 } Paint_section;
 
-void Paint_init(uint16_t width, uint16_t height);
+void Paint_init(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
 Paint_section* Paint_getSection(void);
 void Paint_setWidth(uint16_t width);

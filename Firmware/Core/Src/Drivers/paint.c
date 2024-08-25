@@ -46,7 +46,7 @@ static void Paint_drawChar(uint16_t x, uint16_t y, char character, Font_t* font,
     }
 }
 
-void Paint_init(uint16_t width, uint16_t height) {
+void Paint_init(uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
     uint16_t sectionSize = width * height;
     uint8_t buffer[sectionSize];
 
@@ -54,6 +54,8 @@ void Paint_init(uint16_t width, uint16_t height) {
         buffer[i] = 0xFF;
     }
 
+    state.x = x;
+    state.y = y;
     state.buffer = buffer;
     state.width = width % 8 ? width + 8 - (width % 8) : width;
     state.height = height;
