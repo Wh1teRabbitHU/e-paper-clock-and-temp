@@ -49,9 +49,10 @@
 #define ER_EPM027_CMD_ACTIVE_PROGRAM 0xA1
 #define ER_EPM027_CMD_READ_OTP_DATA 0xA2
 
-void ER_EPM027_turnOn(void);
-void ER_EPM027_turnOff(void);
+void ER_EPM027_powerOn(void);
+void ER_EPM027_powerOff(void);
 void ER_EPM027_sleep();
+void ER_EPM027_start(void);
 void ER_EPM027_init(SPI_HandleTypeDef* spiHandler);
 void ER_EPM027_sendSection(const uint8_t* buffer, uint16_t x, uint16_t y, uint16_t w, uint16_t l);
 void ER_EPM027_drawSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l);

@@ -103,7 +103,7 @@ int main(void) {
     state = Paint_getState();
 
     ER_EPM027_init(&hspi1);
-    ER_EPM027_drawScreen();
+    ER_EPM027_clearScreen();
     ER_EPM027_sendSection(state->image, 0, 0, state->width, state->height);
     ER_EPM027_drawSection(0, 0, state->width, state->height);
 
@@ -115,7 +115,11 @@ int main(void) {
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        HAL_Delay(500);
+        ER_EPM027_start();
+        ER_EPM027_sendSection(state->image, 0, 0, state->width, state->height);
+        ER_EPM027_drawSection(0, 0, state->width, state->height);
+        ER_EPM027_sleep();
+        HAL_Delay(2000);
     }
     /* USER CODE END 3 */
 }

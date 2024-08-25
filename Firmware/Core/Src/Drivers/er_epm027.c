@@ -34,25 +34,22 @@ static void ER_EPM027_sendData(uint8_t data) {
     ER_EPM027_spiTransfer(data);
 }
 
-void ER_EPM027_turnOn(void) {
+void ER_EPM027_powerOn(void) {
     HAL_GPIO_WritePin(DISPLAY_PWR_GPIO_Port, DISPLAY_PWR_Pin, 1);
     HAL_Delay(100);
 }
 
-void ER_EPM027_turnOff(void) { HAL_GPIO_WritePin(DISPLAY_PWR_GPIO_Port, DISPLAY_PWR_Pin, 0); }
+void ER_EPM027_powerOff(void) { HAL_GPIO_WritePin(DISPLAY_PWR_GPIO_Port, DISPLAY_PWR_Pin, 0); }
 
-void ER_EPM027_sleep() {
+void ER_EPM027_sleep(void) {
     ER_EPM027_sendCommand(ER_EPM027_CMD_POWER_OFF);
     ER_EPM027_WaitUntilIdle();
     ER_EPM027_sendCommand(ER_EPM027_CMD_DEEP_SLEEP);
     ER_EPM027_sendData(0xa5);  // check code
 }
 
-void ER_EPM027_init(SPI_HandleTypeDef *spiHandler) {
-    hspi = spiHandler;
-
-    /* EPD hardware init start */
-    ER_EPM027_turnOn();
+void ER_EPM027_start(void) { /* EPD hardware init start */
+    ER_EPM027_powerOn();
     ER_EPM027_reset();
     ER_EPM027_sendCommand(ER_EPM027_CMD_POWER_SETTING);
     ER_EPM027_sendData(0x03);  // VDS_EN, VDG_EN
@@ -93,6 +90,12 @@ void ER_EPM027_init(SPI_HandleTypeDef *spiHandler) {
     ER_EPM027_sendData(0xB0);
     ER_EPM027_sendData(0x01);
     ER_EPM027_sendData(0x08);
+}
+
+void ER_EPM027_init(SPI_HandleTypeDef *spiHandler) {
+    hspi = spiHandler;
+
+    ER_EPM027_start();
 }
 
 void ER_EPM027_sendSection(const uint8_t *buffer, uint16_t x, uint16_t y, uint16_t w, uint16_t l) {
@@ -188,4 +191,6 @@ void ER_EPM027_clearScreen(void) {
     }
 
     HAL_Delay(2);
+
+    ER_EPM027_drawScreen();
 }
