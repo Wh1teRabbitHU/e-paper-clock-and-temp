@@ -106,10 +106,10 @@ int main(void) {
 
     Paint_Section section = {0};
 
-    section.x = ER_EPM027_WIDTH - 48;
+    section.x = ER_EPM027_WIDTH - 28;
     section.y = 0;
-    section.width = 48;
-    section.height = 92;
+    section.width = 28;
+    section.height = 64;
     section.rotation = PAINT_ROTATION_90;
 
     Paint_init(&section);
@@ -125,9 +125,6 @@ int main(void) {
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        ER_EPM027_sleep();
-        HAL_Delay(10000);
-
         SHT40_getMeasurement(SHT40_PRECISION_MEDIUM, &tempResult);
 
         uint8_t tempDecimal = tempResult.temperature;
@@ -147,6 +144,9 @@ int main(void) {
         ER_EPM027_start();
         ER_EPM027_sendSection(&section);
         ER_EPM027_drawSection(&section);
+        ER_EPM027_sleep();
+
+        HAL_Delay(10000);
     }
     /* USER CODE END 3 */
 }

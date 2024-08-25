@@ -171,25 +171,34 @@ void ER_EPM027_drawScreen(void) {
 }
 
 void ER_EPM027_clearScreen(void) {
-    ER_EPM027_sendCommand(ER_EPM027_CMD_DATA_START_TRANSMISSION_1);
+    ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DATA_START_TRANSMISSION_2);
+    ER_EPM027_sendData(0 >> 8);
+    ER_EPM027_sendData(0 & 0xf8);
+    ER_EPM027_sendData(0 >> 8);
+    ER_EPM027_sendData(0 & 0xff);
+    ER_EPM027_sendData(ER_EPM027_HEIGHT >> 8);
+    ER_EPM027_sendData(ER_EPM027_HEIGHT & 0xf8);
+    ER_EPM027_sendData(ER_EPM027_WIDTH >> 8);
+    ER_EPM027_sendData(ER_EPM027_WIDTH & 0xff);
 
     HAL_Delay(2);
 
-    for (int i = 0; i < ER_EPM027_WIDTH * ER_EPM027_HEIGHT / 8; i++) {
+    for (int i = 0; i < ER_EPM027_WIDTH * ER_EPM027_HEIGHT; i++) {
         ER_EPM027_sendData(0xFF);
     }
 
     HAL_Delay(2);
 
-    ER_EPM027_sendCommand(ER_EPM027_CMD_DATA_START_TRANSMISSION_2);
+    ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
 
-    HAL_Delay(2);
+    ER_EPM027_sendData(0 >> 8);
+    ER_EPM027_sendData(0 & 0xf8);
+    ER_EPM027_sendData(0 >> 8);
+    ER_EPM027_sendData(0 & 0xff);
+    ER_EPM027_sendData(ER_EPM027_HEIGHT >> 8);
+    ER_EPM027_sendData(ER_EPM027_HEIGHT & 0xf8);
+    ER_EPM027_sendData(ER_EPM027_WIDTH >> 8);
+    ER_EPM027_sendData(ER_EPM027_WIDTH & 0xff);
 
-    for (int i = 0; i < ER_EPM027_WIDTH * ER_EPM027_HEIGHT / 8; i++) {
-        ER_EPM027_sendData(0xFF);
-    }
-
-    HAL_Delay(2);
-
-    ER_EPM027_drawScreen();
+    ER_EPM027_WaitUntilIdle();
 }
