@@ -98,7 +98,7 @@ void ER_EPM027_init(SPI_HandleTypeDef *spiHandler) {
     ER_EPM027_start();
 }
 
-void ER_EPM027_sendSection(const Paint_section *section) {
+void ER_EPM027_sendSection(const Paint_Section *section) {
     if (section->buffer == NULL) {
         return;
     }
@@ -122,7 +122,7 @@ void ER_EPM027_sendSection(const Paint_section *section) {
     HAL_Delay(2);
 }
 
-void ER_EPM027_drawSection(const Paint_section *section) {
+void ER_EPM027_drawSection(const Paint_Section *section) {
     ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
 
     ER_EPM027_sendData(section->x >> 8);

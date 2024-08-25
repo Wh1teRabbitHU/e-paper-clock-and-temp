@@ -94,12 +94,18 @@ int main(void) {
     MX_I2C1_Init();
     MX_SPI1_Init();
     /* USER CODE BEGIN 2 */
-    Paint_section section = {0};
+    Paint_Section section = {0};
 
-    Paint_init(&section, 0, 0, 64, 64);
-    Paint_drawRectangle(&section, 16, 16, 48, 48, PAINT_COLOR_BLACK, 1);
-    Paint_drawRectangle(&section, 32, 32, 64, 64, PAINT_COLOR_WHITE, 1);
-    Paint_drawString(&section, 0, 0, "Hello", &Font12, PAINT_COLOR_BLACK);
+    section.x = ER_EPM027_WIDTH - 48;
+    section.y = 0;
+    section.width = 48;
+    section.height = 92;
+    section.rotation = PAINT_ROTATION_90;
+
+    Paint_init(&section);
+    Paint_drawRectangle(&section, 16, 16, 46, 46, PAINT_COLOR_BLACK, 1);
+    Paint_drawRectangle(&section, 0, 0, 32, 32, PAINT_COLOR_WHITE, 1);
+    Paint_drawString(&section, 2, 2, "Hello World!", &Font12, PAINT_COLOR_BLACK);
 
     ER_EPM027_init(&hspi1);
     ER_EPM027_clearScreen();
@@ -117,7 +123,6 @@ int main(void) {
         ER_EPM027_sleep();
         HAL_Delay(2000);
         ER_EPM027_start();
-        ER_EPM027_sendSection(&section);
         ER_EPM027_drawSection(&section);
     }
     /* USER CODE END 3 */

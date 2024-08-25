@@ -1,6 +1,6 @@
 #include "paint.h"
 
-static void Paint_drawAbsolutePixel(Paint_section* section, uint16_t x, uint16_t y, Paint_PixelColor_t color) {
+static void Paint_drawAbsolutePixel(Paint_Section* section, uint16_t x, uint16_t y, Paint_Color color) {
     if (x >= section->width || y >= section->height) {
         return;
     }
@@ -20,8 +20,8 @@ static void Paint_drawAbsolutePixel(Paint_section* section, uint16_t x, uint16_t
 #endif
 }
 
-static void Paint_drawChar(Paint_section* section, uint16_t x, uint16_t y, char character, Font_t* font,
-                           Paint_PixelColor_t color) {
+static void Paint_drawChar(Paint_Section* section, uint16_t x, uint16_t y, char character, Font_t* font,
+                           Paint_Color color) {
     uint16_t i, j;
     uint16_t offset = (character - ' ') * font->Height * (font->Width / 8 + (font->Width % 8 ? 1 : 0));
     const uint8_t* ptr = &font->table[offset];
@@ -45,22 +45,20 @@ static void Paint_drawChar(Paint_section* section, uint16_t x, uint16_t y, char 
     }
 }
 
-void Paint_init(Paint_section* section, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
-    uint16_t sectionSize = width * height;
+void Paint_init(Paint_Section* section) {
+    uint16_t sectionSize = section->width * section->height;
     uint8_t buffer[sectionSize];
 
     for (uint16_t i = 0; i < sectionSize; i++) {
         buffer[i] = 0xFF;
     }
 
-    section->x = x;
-    section->y = y;
-    section->width = width % 8 ? width + 8 - (width % 8) : width;
-    section->height = height;
+    section->width = section->width % 8 ? section->width + 8 - (section->width % 8) : section->width;
+    section->height = section->height;
     section->buffer = buffer;
 }
 
-void Paint_clear(Paint_section* section, Paint_PixelColor_t color) {
+void Paint_clear(Paint_Section* section, Paint_Color color) {
     uint16_t x, y;
 
     for (x = 0; x < section->width; x++) {
@@ -70,7 +68,7 @@ void Paint_clear(Paint_section* section, Paint_PixelColor_t color) {
     }
 }
 
-void Paint_drawPixel(Paint_section* section, uint16_t x, uint16_t y, Paint_PixelColor_t color) {
+void Paint_drawPixel(Paint_Section* section, uint16_t x, uint16_t y, Paint_Color color) {
     uint16_t point_temp;
 
     if (section->rotation == PAINT_ROTATION_90) {
@@ -89,8 +87,7 @@ void Paint_drawPixel(Paint_section* section, uint16_t x, uint16_t y, Paint_Pixel
     Paint_drawAbsolutePixel(section, x, y, color);
 }
 
-void Paint_drawLine(Paint_section* section, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
-                    Paint_PixelColor_t color) {
+void Paint_drawLine(Paint_Section* section, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, Paint_Color color) {
     /* Bresenham algorithm */
     int16_t dx = x1 - x0 >= 0 ? x1 - x0 : x0 - x1;
     int16_t sx = x0 < x1 ? 1 : -1;
@@ -113,8 +110,7 @@ void Paint_drawLine(Paint_section* section, uint16_t x0, uint16_t y0, uint16_t x
     }
 }
 
-void Paint_drawHorizontalLine(Paint_section* section, uint16_t x, uint16_t y, uint16_t width,
-                              Paint_PixelColor_t color) {
+void Paint_drawHorizontalLine(Paint_Section* section, uint16_t x, uint16_t y, uint16_t width, Paint_Color color) {
     uint16_t i;
 
     for (i = x; i < x + width; i++) {
@@ -122,7 +118,7 @@ void Paint_drawHorizontalLine(Paint_section* section, uint16_t x, uint16_t y, ui
     }
 }
 
-void Paint_drawVerticalLine(Paint_section* section, uint16_t x, uint16_t y, uint16_t height, Paint_PixelColor_t color) {
+void Paint_drawVerticalLine(Paint_Section* section, uint16_t x, uint16_t y, uint16_t height, Paint_Color color) {
     uint16_t i;
 
     for (i = y; i < y + height; i++) {
@@ -130,8 +126,8 @@ void Paint_drawVerticalLine(Paint_section* section, uint16_t x, uint16_t y, uint
     }
 }
 
-void Paint_drawRectangle(Paint_section* section, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
-                         Paint_PixelColor_t color, uint8_t filled) {
+void Paint_drawRectangle(Paint_Section* section, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, Paint_Color color,
+                         uint8_t filled) {
     uint16_t min_x = x1 > x0 ? x0 : x1;
     uint16_t max_x = x1 > x0 ? x1 : x0;
     uint16_t min_y = y1 > y0 ? y0 : y1;
@@ -151,7 +147,7 @@ void Paint_drawRectangle(Paint_section* section, uint16_t x0, uint16_t y0, uint1
     }
 }
 
-void Paint_drawCircle(Paint_section* section, uint16_t x, uint16_t y, uint16_t radius, Paint_PixelColor_t color,
+void Paint_drawCircle(Paint_Section* section, uint16_t x, uint16_t y, uint16_t radius, Paint_Color color,
                       uint8_t filled) {
     /* Bresenham algorithm */
     int16_t x_pos = -radius;
@@ -186,8 +182,8 @@ void Paint_drawCircle(Paint_section* section, uint16_t x, uint16_t y, uint16_t r
     } while (x_pos <= 0);
 }
 
-void Paint_drawString(Paint_section* section, uint16_t x, uint16_t y, const char* text, Font_t* font,
-                      Paint_PixelColor_t color) {
+void Paint_drawString(Paint_Section* section, uint16_t x, uint16_t y, const char* text, Font_t* font,
+                      Paint_Color color) {
     const char* p_text = text;
     uint16_t refcolumn = x;
 
