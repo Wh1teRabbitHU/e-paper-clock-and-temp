@@ -25,20 +25,18 @@ typedef struct Paint_section {
     uint16_t height;
 } Paint_section;
 
-void Paint_init(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
-
-Paint_section* Paint_getSection(void);
-void Paint_setWidth(uint16_t width);
-void Paint_setHeight(uint16_t height);
-void Paint_setRotation(Paint_Rotation_t rotation);
-
-void Paint_clear(Paint_PixelColor_t color);
-void Paint_drawPixel(uint16_t x, uint16_t y, Paint_PixelColor_t color);
-void Paint_drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, Paint_PixelColor_t color);
-void Paint_drawHorizontalLine(uint16_t x, uint16_t y, uint16_t width, Paint_PixelColor_t color);
-void Paint_drawVerticalLine(uint16_t x, uint16_t y, uint16_t height, Paint_PixelColor_t color);
-void Paint_drawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, Paint_PixelColor_t color, uint8_t filled);
-void Paint_drawCircle(uint16_t x, uint16_t y, uint16_t radius, Paint_PixelColor_t color, uint8_t filled);
-void Paint_drawString(uint16_t x, uint16_t y, const char* text, Font_t* font, Paint_PixelColor_t color);
+void Paint_init(Paint_section* section, uint16_t x, uint16_t y, uint16_t width, uint16_t height);
+void Paint_clear(Paint_section* section, Paint_PixelColor_t color);
+void Paint_drawPixel(Paint_section* section, uint16_t x, uint16_t y, Paint_PixelColor_t color);
+void Paint_drawLine(Paint_section* section, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
+                    Paint_PixelColor_t color);
+void Paint_drawHorizontalLine(Paint_section* section, uint16_t x, uint16_t y, uint16_t width, Paint_PixelColor_t color);
+void Paint_drawVerticalLine(Paint_section* section, uint16_t x, uint16_t y, uint16_t height, Paint_PixelColor_t color);
+void Paint_drawRectangle(Paint_section* section, uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
+                         Paint_PixelColor_t color, uint8_t filled);
+void Paint_drawCircle(Paint_section* section, uint16_t x, uint16_t y, uint16_t radius, Paint_PixelColor_t color,
+                      uint8_t filled);
+void Paint_drawString(Paint_section* section, uint16_t x, uint16_t y, const char* text, Font_t* font,
+                      Paint_PixelColor_t color);
 
 #endif
