@@ -1,6 +1,6 @@
 #include "paint.h"
 
-static Paint_state state = {.rotation = PAINT_ROTATION_0};
+static Paint_section state = {.rotation = PAINT_ROTATION_0};
 
 static void Paint_drawAbsolutePixel(uint16_t x, uint16_t y, Paint_PixelColor_t color) {
     if (x >= state.width || y >= state.height) {
@@ -9,26 +9,57 @@ static void Paint_drawAbsolutePixel(uint16_t x, uint16_t y, Paint_PixelColor_t c
 
 #if PAINT_INVERT_COLOR == 1
     if (color == PAINT_COLOR_BLACK) {
-        state.image[(x + y * state.width) / 8] |= 0x80 >> (x % 8);
+        state.buffer[(x + y * state.width) / 8] |= 0x80 >> (x % 8);
     } else {
-        state.image[(x + y * state.width) / 8] &= ~(0x80 >> (x % 8));
+        state.buffer[(x + y * state.width) / 8] &= ~(0x80 >> (x % 8));
     }
 #else
     if (color == PAINT_COLOR_BLACK) {
-        state.image[(x + y * state.width) / 8] &= ~(0x80 >> (x % 8));
+        state.buffer[(x + y * state.width) / 8] &= ~(0x80 >> (x % 8));
     } else {
-        state.image[(x + y * state.width) / 8] |= 0x80 >> (x % 8);
+        state.buffer[(x + y * state.width) / 8] |= 0x80 >> (x % 8);
     }
 #endif
 }
 
-void Paint_init(uint8_t* image, uint16_t width, uint16_t height) {
-    state.image = image;
+static void Paint_drawChar(uint16_t x, uint16_t y, char character, Font_t* font, Paint_PixelColor_t color) {
+    uint16_t i, j;
+    uint16_t offset = (character - ' ') * font->Height * (font->Width / 8 + (font->Width % 8 ? 1 : 0));
+    const uint8_t* ptr = &font->table[offset];
+
+    for (j = 0; j < font->Height; j++) {
+        for (i = 0; i < font->Width; i++) {
+            if (*ptr & (0x80 >> (i % 8))) {
+                Paint_drawPixel(x + i, y + j, color);
+            } else {
+                Paint_drawPixel(x + i, y + j, !color);
+            }
+
+            if (i % 8 == 7) {
+                ptr++;
+            }
+        }
+
+        if (font->Width % 8 != 0) {
+            ptr++;
+        }
+    }
+}
+
+void Paint_init(uint16_t width, uint16_t height) {
+    uint16_t sectionSize = width * height;
+    uint8_t buffer[sectionSize];
+
+    for (uint16_t i = 0; i < sectionSize; i++) {
+        buffer[i] = 0xFF;
+    }
+
+    state.buffer = buffer;
     state.width = width % 8 ? width + 8 - (width % 8) : width;
     state.height = height;
 }
 
-Paint_state* Paint_getState(void) { return &state; }
+Paint_section* Paint_getSection(void) { return &state; }
 
 void Paint_setWidth(uint16_t width) { state.width = width; }
 
@@ -156,4 +187,16 @@ void Paint_drawCircle(uint16_t x, uint16_t y, uint16_t radius, Paint_PixelColor_
             err += ++x_pos * 2 + 1;
         }
     } while (x_pos <= 0);
+}
+
+void Paint_drawString(uint16_t x, uint16_t y, const char* text, Font_t* font, Paint_PixelColor_t color) {
+    const char* p_text = text;
+    uint16_t refcolumn = x;
+
+    while (*p_text != 0) {
+        Paint_drawChar(refcolumn, y, *p_text, font, color);
+
+        refcolumn += font->Width;
+        p_text++;
+    }
 }

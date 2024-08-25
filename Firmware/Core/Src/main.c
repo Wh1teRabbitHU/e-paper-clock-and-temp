@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "er_epm027.h"
+#include "fonts.h"
 #include "paint.h"
 /* USER CODE END Includes */
 
@@ -93,19 +94,17 @@ int main(void) {
     MX_I2C1_Init();
     MX_SPI1_Init();
     /* USER CODE BEGIN 2 */
-    uint8_t image[1024] = {0};
-    Paint_state *state;
-
-    Paint_init(image, 64, 64);
+    Paint_init(64, 64);
     Paint_drawRectangle(16, 16, 48, 48, PAINT_COLOR_BLACK, 1);
     Paint_drawRectangle(32, 32, 64, 64, PAINT_COLOR_WHITE, 1);
+    Paint_drawString(0, 0, "Hello", &Font12, PAINT_COLOR_BLACK);
 
-    state = Paint_getState();
+    Paint_section *section = Paint_getSection();
 
     ER_EPM027_init(&hspi1);
     ER_EPM027_clearScreen();
-    ER_EPM027_sendSection(state->image, 0, 0, state->width, state->height);
-    ER_EPM027_drawSection(0, 0, state->width, state->height);
+    ER_EPM027_sendSection(section->buffer, 0, 0, section->width, section->height);
+    ER_EPM027_drawSection(0, 0, section->width, section->height);
 
     /* USER CODE END 2 */
 
@@ -115,11 +114,11 @@ int main(void) {
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        ER_EPM027_start();
-        ER_EPM027_sendSection(state->image, 0, 0, state->width, state->height);
-        ER_EPM027_drawSection(0, 0, state->width, state->height);
         ER_EPM027_sleep();
         HAL_Delay(2000);
+        ER_EPM027_start();
+        ER_EPM027_sendSection(section->buffer, 0, 0, section->width, section->height);
+        ER_EPM027_drawSection(0, 0, section->width, section->height);
     }
     /* USER CODE END 3 */
 }

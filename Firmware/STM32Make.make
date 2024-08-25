@@ -38,6 +38,8 @@ BUILD_DIR = build
 C_SOURCES =  \
 Core/Src/Drivers/er_epm027.c \
 Core/Src/Drivers/paint.c \
+Core/Src/Utils/font12.c \
+Core/Src/Utils/font24.c \
 Core/Src/main.c \
 Core/Src/stm32l0xx_hal_msp.c \
 Core/Src/stm32l0xx_it.c \
@@ -132,6 +134,7 @@ AS_INCLUDES = \
 C_INCLUDES =  \
 -ICore/Inc \
 -ICore/Inc/Drivers \
+-ICore/Inc/Utils \
 -IDrivers/CMSIS/Device/ST/STM32L0xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32L0xx_HAL_Driver/Inc \
