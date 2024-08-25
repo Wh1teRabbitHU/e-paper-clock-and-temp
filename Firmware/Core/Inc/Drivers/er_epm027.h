@@ -8,6 +8,9 @@
 #define ER_EPM027_WIDTH 176
 #define ER_EPM027_HEIGHT 264
 
+#define ER_EPM027_STATE_BUSY 0x00
+#define ER_EPM027_STATE_IDLE 0x01
+
 #define ER_EPM027_CMD_PANEL_SETTING 0x00
 #define ER_EPM027_CMD_POWER_SETTING 0x01
 #define ER_EPM027_CMD_POWER_OFF 0x02
@@ -48,11 +51,12 @@
 
 void ER_EPM027_turnOn(void);
 void ER_EPM027_turnOff(void);
+void ER_EPM027_sleep();
 void ER_EPM027_init(SPI_HandleTypeDef* spiHandler);
 void ER_EPM027_sendSection(const uint8_t* buffer, uint16_t x, uint16_t y, uint16_t w, uint16_t l);
-void ER_EPM027_showSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l);
-void ER_EPM027_sendImage(const uint8_t* imageBuffer, uint16_t width, uint16_t height);
-void ER_EPM027_showImage(void);
-void ER_EPM027_clearImage(void);
+void ER_EPM027_drawSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l);
+void ER_EPM027_sendScreen(const uint8_t* imageBuffer, uint16_t width, uint16_t height);
+void ER_EPM027_drawScreen(void);
+void ER_EPM027_clearScreen(void);
 
 #endif

@@ -7,7 +7,7 @@ static void ER_EPM027_spiTransfer(uint8_t command) {
     spiBuffer[0] = command;
 
     HAL_GPIO_WritePin(DISPLAY_CS_GPIO_Port, DISPLAY_CS_Pin, 0);
-    volatile HAL_StatusTypeDef result = HAL_SPI_Transmit(hspi, spiBuffer, 1, 1000);
+    HAL_SPI_Transmit(hspi, spiBuffer, 1, 1000);
     HAL_GPIO_WritePin(DISPLAY_CS_GPIO_Port, DISPLAY_CS_Pin, 1);
 }
 
@@ -19,8 +19,8 @@ static void ER_EPM027_reset(void) {
 }
 
 static void ER_EPM027_WaitUntilIdle(void) {
-    while (HAL_GPIO_ReadPin(DISPLAY_BUSY_GPIO_Port, DISPLAY_BUSY_Pin) == 0) {  // 0: busy, 1: idle
-        HAL_Delay(100);
+    while (HAL_GPIO_ReadPin(DISPLAY_BUSY_GPIO_Port, DISPLAY_BUSY_Pin) == ER_EPM027_STATE_BUSY) {
+        HAL_Delay(10);
     }
 }
 
@@ -36,10 +36,17 @@ static void ER_EPM027_sendData(uint8_t data) {
 
 void ER_EPM027_turnOn(void) {
     HAL_GPIO_WritePin(DISPLAY_PWR_GPIO_Port, DISPLAY_PWR_Pin, 1);
-    HAL_Delay(200);
+    HAL_Delay(100);
 }
 
 void ER_EPM027_turnOff(void) { HAL_GPIO_WritePin(DISPLAY_PWR_GPIO_Port, DISPLAY_PWR_Pin, 0); }
+
+void ER_EPM027_sleep() {
+    ER_EPM027_sendCommand(ER_EPM027_CMD_POWER_OFF);
+    ER_EPM027_WaitUntilIdle();
+    ER_EPM027_sendCommand(ER_EPM027_CMD_DEEP_SLEEP);
+    ER_EPM027_sendData(0xa5);  // check code
+}
 
 void ER_EPM027_init(SPI_HandleTypeDef *spiHandler) {
     hspi = spiHandler;
@@ -112,7 +119,7 @@ void ER_EPM027_sendSection(const uint8_t *buffer, uint16_t x, uint16_t y, uint16
     HAL_Delay(2);
 }
 
-void ER_EPM027_showSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l) {
+void ER_EPM027_drawSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l) {
     ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
 
     ER_EPM027_sendData(x >> 8);
@@ -127,7 +134,7 @@ void ER_EPM027_showSection(uint16_t x, uint16_t y, uint16_t w, uint16_t l) {
     ER_EPM027_WaitUntilIdle();
 }
 
-void ER_EPM027_sendImage(const uint8_t *imageBuffer, uint16_t width, uint16_t height) {
+void ER_EPM027_sendScreen(const uint8_t *imageBuffer, uint16_t width, uint16_t height) {
     if (imageBuffer == NULL) {
         return;
     }
@@ -156,22 +163,29 @@ void ER_EPM027_sendImage(const uint8_t *imageBuffer, uint16_t width, uint16_t he
     ER_EPM027_WaitUntilIdle();
 }
 
-void ER_EPM027_showImage(void) {
+void ER_EPM027_drawScreen(void) {
     ER_EPM027_sendCommand(ER_EPM027_CMD_DISPLAY_REFRESH);
     ER_EPM027_WaitUntilIdle();
 }
 
-void ER_EPM027_clearImage(void) {
+void ER_EPM027_clearScreen(void) {
     ER_EPM027_sendCommand(ER_EPM027_CMD_DATA_START_TRANSMISSION_1);
+
     HAL_Delay(2);
+
     for (int i = 0; i < ER_EPM027_WIDTH * ER_EPM027_HEIGHT / 8; i++) {
         ER_EPM027_sendData(0xFF);
     }
+
     HAL_Delay(2);
+
     ER_EPM027_sendCommand(ER_EPM027_CMD_DATA_START_TRANSMISSION_2);
+
     HAL_Delay(2);
+
     for (int i = 0; i < ER_EPM027_WIDTH * ER_EPM027_HEIGHT / 8; i++) {
         ER_EPM027_sendData(0xFF);
     }
+
     HAL_Delay(2);
 }

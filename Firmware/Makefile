@@ -39,7 +39,7 @@ C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/stm32l0xx_it.c \
 Core/Src/stm32l0xx_hal_msp.c \
-Core/Src/Drivers/display.c \
+Core/Src/Drivers/paint.c \
 Core/Src/Drivers/er_epm027.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c_ex.c \

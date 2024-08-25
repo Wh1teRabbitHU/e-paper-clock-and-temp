@@ -21,8 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "display.h"
 #include "er_epm027.h"
+#include "paint.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,16 +94,18 @@ int main(void) {
     MX_SPI1_Init();
     /* USER CODE BEGIN 2 */
     uint8_t image[1024] = {0};
-    Display_state *state;
+    Paint_state *state;
 
-    Display_init(image, 64, 64);
-    Display_drawFilledRectangle(16, 16, 48, 48, DISPLAY_COLOR_BLACK);
-    Display_drawFilledRectangle(32, 32, 64, 64, DISPLAY_COLOR_WHITE);
+    Paint_init(image, 64, 64);
+    Paint_drawRectangle(16, 16, 48, 48, PAINT_COLOR_BLACK, 1);
+    Paint_drawRectangle(32, 32, 64, 64, PAINT_COLOR_WHITE, 1);
 
-    state = Display_getState();
+    state = Paint_getState();
 
     ER_EPM027_init(&hspi1);
-    ER_EPM027_clearImage();
+    ER_EPM027_drawScreen();
+    ER_EPM027_sendSection(state->image, 0, 0, state->width, state->height);
+    ER_EPM027_drawSection(0, 0, state->width, state->height);
 
     /* USER CODE END 2 */
 
@@ -113,9 +115,6 @@ int main(void) {
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-
-        ER_EPM027_sendSection(state->image, 0, 0, state->width, state->height);
-        ER_EPM027_showImage();
         HAL_Delay(500);
     }
     /* USER CODE END 3 */
@@ -229,7 +228,7 @@ static void MX_SPI1_Init(void) {
     hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
     hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
     hspi1.Init.NSS = SPI_NSS_SOFT;
-    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+    hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
     hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
     hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
     hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

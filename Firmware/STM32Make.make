@@ -36,8 +36,8 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/Drivers/display.c \
 Core/Src/Drivers/er_epm027.c \
+Core/Src/Drivers/paint.c \
 Core/Src/main.c \
 Core/Src/stm32l0xx_hal_msp.c \
 Core/Src/stm32l0xx_it.c \
