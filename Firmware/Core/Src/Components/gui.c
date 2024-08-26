@@ -6,11 +6,11 @@ static GUI_MeasurementState state = {.humidity = 0.0, .temperature = 0.0, .updat
 static inline void GUI_sendTemperatureSection(double temperature) {
     Paint_Section *section = malloc(sizeof(Paint_Section));
 
-    section->x = ER_EPM027_WIDTH - 24;
-    section->y = 0;
-    section->width = 24;
-    section->height = Font24.Width * 6;
-    section->rotation = PAINT_ROTATION_90;
+    section->x = GUI_TEMPERATURE_X;
+    section->y = GUI_TEMPERATURE_Y;
+    section->width = GUI_TEMPERATURE_WIDTH;
+    section->height = GUI_TEMPERATURE_HEIGHT;
+    section->rotation = GUI_TEMPERATURE_ROTATION;
 
     Paint_init(section);
 
@@ -29,11 +29,11 @@ static inline void GUI_sendTemperatureSection(double temperature) {
 static inline void GUI_sendHumiditySection(double humidity) {
     Paint_Section *section = malloc(sizeof(Paint_Section));
 
-    section->x = ER_EPM027_WIDTH - 48;
-    section->y = 0;
-    section->width = 24;
-    section->height = Font24.Width * 6;
-    section->rotation = PAINT_ROTATION_90;
+    section->x = GUI_HUMIDITY_X;
+    section->y = GUI_HUMIDITY_Y;
+    section->width = GUI_HUMIDITY_WIDTH;
+    section->height = GUI_HUMIDITY_HEIGHT;
+    section->rotation = GUI_HUMIDITY_ROTATION;
 
     Paint_init(section);
 
@@ -97,7 +97,8 @@ void GUI_drawMeasurements(SHT40_MeasurementResult *measurement) {
     GUI_sendTemperatureSection(measurement->temperature);
     GUI_sendHumiditySection(measurement->humidity);
 
-    ER_EPM027_drawPartialScreen(ER_EPM027_WIDTH - 48, 0, 48, Font24.Width * 6);
+    ER_EPM027_drawPartialScreen(GUI_HUMIDITY_X, GUI_HUMIDITY_Y, GUI_TEMPERATURE_WIDTH + GUI_HUMIDITY_WIDTH,
+                                GUI_HUMIDITY_HEIGHT);
 }
 
 void GUI_updateMeasurements() {

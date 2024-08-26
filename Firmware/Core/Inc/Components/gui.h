@@ -11,6 +11,18 @@
 
 #define GUI_FORCE_UPDATE_AFTER 60
 
+#define GUI_TEMPERATURE_X (ER_EPM027_WIDTH / 2)
+#define GUI_TEMPERATURE_Y (((ER_EPM027_HEIGHT) / 2) - (17 * 6 / 2))
+#define GUI_TEMPERATURE_WIDTH (24)
+#define GUI_TEMPERATURE_HEIGHT (17 * 6)
+#define GUI_TEMPERATURE_ROTATION (PAINT_ROTATION_90)
+
+#define GUI_HUMIDITY_X ((ER_EPM027_WIDTH / 2) - 24)
+#define GUI_HUMIDITY_Y (((ER_EPM027_HEIGHT) / 2) - (17 * 6 / 2))
+#define GUI_HUMIDITY_WIDTH (24)
+#define GUI_HUMIDITY_HEIGHT (17 * 6)
+#define GUI_HUMIDITY_ROTATION (PAINT_ROTATION_90)
+
 typedef struct GUI_MeasurementState {
     double temperature;
     double humidity;
