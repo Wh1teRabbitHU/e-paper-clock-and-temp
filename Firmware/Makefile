@@ -39,11 +39,12 @@ C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/stm32l0xx_it.c \
 Core/Src/stm32l0xx_hal_msp.c \
-Core/Src/Drivers/paint.c \
+Core/Src/Components/gui.c \
 Core/Src/Drivers/sht40.c \
 Core/Src/Drivers/er_epm027.c \
 Core/Src/Utils/font12.c \
 Core/Src/Utils/font24.c \
+Core/Src/Utils/paint.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c_ex.c \
 Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal.c \
@@ -119,6 +120,7 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/Inc/Components \
 -ICore/Inc/Drivers \
 -ICore/Inc/Utils \
 -IDrivers/STM32L0xx_HAL_Driver/Inc \

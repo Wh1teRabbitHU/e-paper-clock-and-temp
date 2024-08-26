@@ -123,18 +123,7 @@ void ER_EPM027_sendSection(const Paint_Section *section) {
 }
 
 void ER_EPM027_drawSection(const Paint_Section *section) {
-    ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
-
-    ER_EPM027_sendData(section->x >> 8);
-    ER_EPM027_sendData(section->x & 0xf8);
-    ER_EPM027_sendData(section->y >> 8);
-    ER_EPM027_sendData(section->y & 0xff);
-    ER_EPM027_sendData(section->width >> 8);
-    ER_EPM027_sendData(section->width & 0xf8);
-    ER_EPM027_sendData(section->height >> 8);
-    ER_EPM027_sendData(section->height & 0xff);
-
-    ER_EPM027_WaitUntilIdle();
+    ER_EPM027_drawPartialScreen(section->x, section->y, section->width, section->height);
 }
 
 void ER_EPM027_sendScreen(const uint8_t *imageBuffer, uint16_t width, uint16_t height) {
@@ -163,6 +152,21 @@ void ER_EPM027_sendScreen(const uint8_t *imageBuffer, uint16_t width, uint16_t h
     HAL_Delay(2);
 
     ER_EPM027_drawScreen();
+}
+
+void ER_EPM027_drawPartialScreen(uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+    ER_EPM027_sendCommand(ER_EPM027_CMD_PARTIAL_DISPLAY_REFRESH);
+
+    ER_EPM027_sendData(x >> 8);
+    ER_EPM027_sendData(x & 0xf8);
+    ER_EPM027_sendData(y >> 8);
+    ER_EPM027_sendData(y & 0xff);
+    ER_EPM027_sendData(width >> 8);
+    ER_EPM027_sendData(width & 0xf8);
+    ER_EPM027_sendData(height >> 8);
+    ER_EPM027_sendData(height & 0xff);
+
+    ER_EPM027_WaitUntilIdle();
 }
 
 void ER_EPM027_drawScreen(void) {

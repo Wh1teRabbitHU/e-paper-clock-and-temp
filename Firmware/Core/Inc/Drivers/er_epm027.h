@@ -58,6 +58,7 @@ void ER_EPM027_init(SPI_HandleTypeDef* spiHandler);
 void ER_EPM027_sendSection(const Paint_Section* section);
 void ER_EPM027_drawSection(const Paint_Section* section);
 void ER_EPM027_sendScreen(const uint8_t* imageBuffer, uint16_t width, uint16_t height);
+void ER_EPM027_drawPartialScreen(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 void ER_EPM027_drawScreen(void);
 void ER_EPM027_clearScreen(void);
 

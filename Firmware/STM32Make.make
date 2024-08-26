@@ -36,11 +36,12 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Src/Components/gui.c \
 Core/Src/Drivers/er_epm027.c \
-Core/Src/Drivers/paint.c \
 Core/Src/Drivers/sht40.c \
 Core/Src/Utils/font12.c \
 Core/Src/Utils/font24.c \
+Core/Src/Utils/paint.c \
 Core/Src/main.c \
 Core/Src/stm32l0xx_hal_msp.c \
 Core/Src/stm32l0xx_it.c \
@@ -134,6 +135,7 @@ AS_INCLUDES = \
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/Inc/Components \
 -ICore/Inc/Drivers \
 -ICore/Inc/Utils \
 -IDrivers/CMSIS/Device/ST/STM32L0xx/Include \

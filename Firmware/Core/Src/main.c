@@ -22,11 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "er_epm027.h"
-#include "fonts.h"
-#include "math.h"
-#include "paint.h"
+#include "gui.h"
 #include "sht40.h"
-#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,25 +94,12 @@ int main(void) {
     MX_I2C1_Init();
     MX_SPI1_Init();
     /* USER CODE BEGIN 2 */
+
     SHT40_init(&hi2c1);
-
-    char tempBuffer[16];
-    char humidityBuffer[16];
-
-    SHT40_MeasurementResult tempResult = {0};
-
-    Paint_Section section = {0};
-
-    section.x = ER_EPM027_WIDTH - 28;
-    section.y = 0;
-    section.width = 28;
-    section.height = 64;
-    section.rotation = PAINT_ROTATION_90;
-
-    Paint_init(&section);
-
     ER_EPM027_init(&hspi1);
     ER_EPM027_clearScreen();
+
+    GUI_init();
 
     /* USER CODE END 2 */
 
@@ -125,28 +109,11 @@ int main(void) {
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        SHT40_getMeasurement(SHT40_PRECISION_MEDIUM, &tempResult);
-
-        uint8_t tempDecimal = tempResult.temperature;
-        float tmpFrac1 = tempResult.temperature - tempDecimal;
-        int tempFraction = trunc(tmpFrac1 * 100);
-
-        sprintf(tempBuffer, "%d.%dC", tempDecimal, tempFraction);
-        Paint_drawString(&section, 2, 2, tempBuffer, &Font12, PAINT_COLOR_BLACK);
-
-        uint8_t humDecimal = tempResult.humidity;
-        float tmpFrac2 = tempResult.humidity - humDecimal;
-        int humFraction = trunc(tmpFrac2 * 100);
-
-        sprintf(humidityBuffer, "%d.%d%%", humDecimal, humFraction);
-        Paint_drawString(&section, 2, 18, humidityBuffer, &Font12, PAINT_COLOR_BLACK);
-
         ER_EPM027_start();
-        ER_EPM027_sendSection(&section);
-        ER_EPM027_drawSection(&section);
+        GUI_updateMeasurements();
         ER_EPM027_sleep();
 
-        HAL_Delay(10000);
+        HAL_Delay(1000);
     }
     /* USER CODE END 3 */
 }
