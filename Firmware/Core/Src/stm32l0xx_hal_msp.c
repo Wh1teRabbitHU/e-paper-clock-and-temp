@@ -208,6 +208,56 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
 
 }
 
+/**
+* @brief TIM_OnePulse MSP Initialization
+* This function configures the hardware resources used in this example
+* @param htim_onepulse: TIM_OnePulse handle pointer
+* @retval None
+*/
+void HAL_TIM_OnePulse_MspInit(TIM_HandleTypeDef* htim_onepulse)
+{
+  if(htim_onepulse->Instance==TIM21)
+  {
+  /* USER CODE BEGIN TIM21_MspInit 0 */
+
+  /* USER CODE END TIM21_MspInit 0 */
+    /* Peripheral clock enable */
+    __HAL_RCC_TIM21_CLK_ENABLE();
+    /* TIM21 interrupt Init */
+    HAL_NVIC_SetPriority(TIM21_IRQn, 3, 0);
+    HAL_NVIC_EnableIRQ(TIM21_IRQn);
+  /* USER CODE BEGIN TIM21_MspInit 1 */
+
+  /* USER CODE END TIM21_MspInit 1 */
+  }
+
+}
+
+/**
+* @brief TIM_OnePulse MSP De-Initialization
+* This function freeze the hardware resources used in this example
+* @param htim_onepulse: TIM_OnePulse handle pointer
+* @retval None
+*/
+void HAL_TIM_OnePulse_MspDeInit(TIM_HandleTypeDef* htim_onepulse)
+{
+  if(htim_onepulse->Instance==TIM21)
+  {
+  /* USER CODE BEGIN TIM21_MspDeInit 0 */
+
+  /* USER CODE END TIM21_MspDeInit 0 */
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM21_CLK_DISABLE();
+
+    /* TIM21 interrupt DeInit */
+    HAL_NVIC_DisableIRQ(TIM21_IRQn);
+  /* USER CODE BEGIN TIM21_MspDeInit 1 */
+
+  /* USER CODE END TIM21_MspDeInit 1 */
+  }
+
+}
+
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
