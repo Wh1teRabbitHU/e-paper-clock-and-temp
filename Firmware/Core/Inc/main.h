@@ -69,6 +69,10 @@ void Error_Handler(void);
 #define DISPLAY_BUSY_GPIO_Port GPIOA
 #define PWR_ALERT_Pin GPIO_PIN_8
 #define PWR_ALERT_GPIO_Port GPIOA
+#define PWR_ALERT_EXTI_IRQn EXTI4_15_IRQn
+#define RTC_INTERRUPT_Pin GPIO_PIN_11
+#define RTC_INTERRUPT_GPIO_Port GPIOA
+#define RTC_INTERRUPT_EXTI_IRQn EXTI4_15_IRQn
 
 /* USER CODE BEGIN Private defines */
 

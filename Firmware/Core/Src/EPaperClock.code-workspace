@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "Firmware",
+			"path": "../.."
+		},
+		{
+			"name": "e-paper-clock-and-temp",
+			"path": "../../.."
+		}
+	],
+	"settings": {
+		"cortex-debug.armToolchainPath": "/Users/tom/Library/Application Support/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-none-eabi-gcc/12.2.1-1.2.1/.content/bin",
+		"cortex-debug.openocdPath": "/Users/tom/Library/Application Support/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/openocd/0.12.0-1.1/.content/bin/openocd",
+		"files.associations": {
+			"*.cpp": "cpp",
+			"display.h": "c",
+			"er_epm027.h": "c",
+			"main.h": "c",
+			"fonts.h": "c",
+			"paint.h": "c",
+			"sht40.h": "c"
+		}
+	}
+}

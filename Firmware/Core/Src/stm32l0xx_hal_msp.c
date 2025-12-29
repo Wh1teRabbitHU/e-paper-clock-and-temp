@@ -224,7 +224,7 @@ void HAL_TIM_OnePulse_MspInit(TIM_HandleTypeDef* htim_onepulse)
     /* Peripheral clock enable */
     __HAL_RCC_TIM21_CLK_ENABLE();
     /* TIM21 interrupt Init */
-    HAL_NVIC_SetPriority(TIM21_IRQn, 3, 0);
+    HAL_NVIC_SetPriority(TIM21_IRQn, 2, 0);
     HAL_NVIC_EnableIRQ(TIM21_IRQn);
   /* USER CODE BEGIN TIM21_MspInit 1 */
 
